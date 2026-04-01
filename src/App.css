@@ -50,47 +50,106 @@ body { overflow-x: hidden; }
   position: relative;
 }
 
-/* ══════════════════════════════════════
-   GRID
-   Vertical lines run full height so they
-   pass through the horizontal line → ✛
-   ══════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   GRID OVERLAY
+   A dedicated fixed div rendered as the last
+   child of .app — z-index 9999 so it is NEVER
+   clipped or hidden by the header or any card.
+   Double-line (stitch) pairs on every axis.
+   Dot crosses rendered with real elements at
+   each intersection.
+   ══════════════════════════════════════════════ */
 
-.app::before {
-  content: '';
+.grid-overlay {
   position: fixed;
+  inset: 0;
   pointer-events: none;
-  z-index: 50;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--grid-inset) - 1px);
-  width: 1px;
-  background: var(--border-light);
+  z-index: 9999;
 }
 
-.app::after {
-  content: '';
-  position: fixed;
-  pointer-events: none;
-  z-index: 50;
+/* ── Vertical pair — left ── */
+.grid-line--left {
+  position: absolute;
   top: 0;
   bottom: 0;
-  right: calc(var(--grid-inset) - 1px);
-  width: 1px;
-  background: var(--border-light);
+  left: var(--grid-inset);
+  width: 3px;
+  /* 1px · gap · 1px */
+  background: linear-gradient(90deg,
+    var(--border-light) 0px,
+    var(--border-light) 1px,
+    transparent         1px,
+    transparent         2px,
+    var(--border-light) 2px,
+    var(--border-light) 3px
+  );
 }
 
-/* Horizontal line */
-.header::before {
-  content: '';
-  position: fixed;
-  top: var(--grid-line-top);
+/* ── Vertical pair — right ── */
+.grid-line--right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: var(--grid-inset);
+  width: 3px;
+  background: linear-gradient(90deg,
+    var(--border-light) 0px,
+    var(--border-light) 1px,
+    transparent         1px,
+    transparent         2px,
+    var(--border-light) 2px,
+    var(--border-light) 3px
+  );
+}
+
+/* ── Horizontal pair ── */
+.grid-line--top {
+  position: absolute;
   left: 0;
   right: 0;
-  height: 1px;
-  background: var(--border-light);
-  z-index: 49;
-  pointer-events: none;
+  top: var(--grid-line-top);
+  height: 3px;
+  background: linear-gradient(180deg,
+    var(--border-light) 0px,
+    var(--border-light) 1px,
+    transparent         1px,
+    transparent         2px,
+    var(--border-light) 2px,
+    var(--border-light) 3px
+  );
+}
+
+/* ── Dot crosses ──
+   A 7×7 solid square centered exactly on each
+   intersection of vertical + horizontal pairs,
+   painted in the bg color so it punches a clean
+   "dot gap" through both line pairs, then an
+   inset box-shadow draws the actual cross dot. */
+.grid-dot {
+  position: absolute;
+  top: var(--grid-line-top);
+  width: 7px;
+  height: 7px;
+  transform: translate(-50%, -50%);
+  /* hollow out the crossing area */
+  background: var(--bg-cream);
+  /* then paint a 3×3 dot in the center */
+  box-shadow:
+    inset 1px  1px 0 var(--border-light),
+    inset -1px  1px 0 var(--border-light),
+    inset 1px -1px 0 var(--border-light),
+    inset -1px -1px 0 var(--border-light),
+    0 0 0 1px var(--border-light);
+  border-radius: 1px;
+}
+
+.grid-dot--left {
+  left: var(--grid-inset);
+}
+
+.grid-dot--right {
+  right: var(--grid-inset);
+  transform: translate(50%, -50%);
 }
 
 /* =================

@@ -193,6 +193,15 @@ function App() {
           <EmptyState query={query} />
         ) : null}
       </main>
+
+      {/* Grid overlay — always on top, never clipped by header or anything */}
+      <div className="grid-overlay" aria-hidden="true">
+        <div className="grid-line grid-line--left" />
+        <div className="grid-line grid-line--right" />
+        <div className="grid-line grid-line--top" />
+        <div className="grid-dot grid-dot--left" />
+        <div className="grid-dot grid-dot--right" />
+      </div>
     </div>
   );
 }
